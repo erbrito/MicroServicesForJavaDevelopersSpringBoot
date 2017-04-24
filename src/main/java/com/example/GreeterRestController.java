@@ -24,10 +24,12 @@ public class GreeterRestController {
     produces = "text/plain")
     public String greeting(){
         String backendServiceUrl = String.format(
-                "http://%s:%d/hello?greeting={greeting}",
+                "http://%s:%d/api/backend?greeting={greeting}",
                 backendServiceHost, backendServicePort);
-        System.out.println ("Sending to: " + backendServiceUrl);
-        return backendServiceUrl;
+        BackendDTO response = template.getForObject(
+                backendServiceUrl, BackendDTO.class, saying
+        );
+        return response.getGreeting() + " at host: " + response.getIp();
     }
 
     public String getSaying() {
