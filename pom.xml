@@ -34,6 +34,7 @@
 		<fabric8.service.type>LoadBalancer</fabric8.service.type>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+        <hystrix.version>1.5.11</hystrix.version>
 
         <fabric8.env.GREETING_BACKENDSERVICEHOST>backend</fabric8.env.GREETING_BACKENDSERVICEHOST>
         <fabric8.env.GREETING_BACKENDSERVICEPORT>80</fabric8.env.GREETING_BACKENDSERVICEPORT>
@@ -82,6 +83,14 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
+
+        <!--Hystrix: Circuit Breaker -->
+        <dependency>
+            <groupId>com.netflix.hystrix</groupId>
+            <artifactId>hystrix-core</artifactId>
+            <version>${hystrix.version}</version>
+        </dependency>
+
 	</dependencies>
 
 	<build>
