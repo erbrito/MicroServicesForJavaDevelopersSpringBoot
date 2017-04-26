@@ -61,6 +61,50 @@ hola-springboot-17e5n   1/1       Running   0          47s
 hola-springboot-1hqox   1/1       Running   0          47s
 
 
+S2I, creating a new application
+-------------------------------
+
+$ oc new-app codecentric/springboot-maven3-centos~https://github.com/erbrito/MicroServicesForJavaDevelopersSpringBoot.git --name=holamicro
+
+
+### update configruation of pods with config maps:
+
+#### create configmap
+$ oc create configmap hola-config --from-file=src/main/openshift/application.properties 
+
+### Update deployment confituration to use the configmap
+
+$ oc get dc
+NAME        REVISION   DESIRED   CURRENT   TRIGGERED BY
+holamicro   10         1         1         config,image(holamicro:latest)
+
+
+$ oc describe dc holamicro
+
+Containers: 
+    Volume Mounts:
+      /opt/app-root/src/config from volume-z8608 (rw)
+      
+Volumes:
+   volume-z8608:
+    Type:       ConfigMap (a volume populated by a ConfigMap)
+    Name:       hola-config
+
+
+Strategy: 
+use the web console the first time to get it done, or use the template file from any source of inspiration
+then, export it with:
+
+ $ oc export dc holamicro -o yaml > src/main/openshift/dc.yml
+ 
+ all the configurations can be found at src/main/openshift/rawTemplate.yml
+
+    
+### adding health checks:
+
+Liveness:   http-get http://:8080/api/hola delay=10s timeout=1s period=10s #success=1 #failure=3
+Readiness:  http-get http://:8080/configprops delay=5s timeout=1s period=10s #success=1 #failure=3
+
 
 
 

@@ -1,0 +1,1141 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: holamicro
+    name: holamicro
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: holamicro:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: https://github.com/erbrito/MicroServicesForJavaDevelopersSpringBoot.git
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: springboot-maven3-centos:latest
+      type: Source
+    triggers:
+    - github:
+        secret: 3YlxS9LRN4K-iOUXzyN1
+      type: GitHub
+    - generic:
+        secret: BPXuCe0QwJZgagkHNtZ2
+      type: Generic
+    - type: ConfigChange
+    - imageChange: {}
+      type: ImageChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: Build
+  metadata:
+    annotations:
+      openshift.io/build-config.name: holamicro
+      openshift.io/build.number: "1"
+      openshift.io/build.pod-name: holamicro-1-build
+    creationTimestamp: null
+    labels:
+      app: holamicro
+      buildconfig: holamicro
+      openshift.io/build-config.name: holamicro
+      openshift.io/build.start-policy: Serial
+    name: holamicro-1
+  spec:
+    nodeSelector: null
+    output:
+      pushSecret:
+        name: builder-dockercfg-xh39h
+      to:
+        kind: ImageStreamTag
+        name: holamicro:latest
+    postCommit: {}
+    resources: {}
+    revision:
+      git:
+        author:
+          email: ebrito@ebrito.local
+          name: Erick Brito
+        commit: 722a52d2f5009cf9c6523e4b315aea91d8d6f782
+        committer:
+          email: ebrito@ebrito.local
+          name: Erick Brito
+        message: adding docker env variables to allow get service discovery
+      type: Git
+    serviceAccount: builder
+    source:
+      git:
+        uri: https://github.com/erbrito/MicroServicesForJavaDevelopersSpringBoot.git
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: DockerImage
+          name: codecentric/springboot-maven3-centos@sha256:b39d58f7beaf97c68047f82a45f74ee1173d162d36f066caa5f11496629f7b13
+      type: Source
+    triggeredBy:
+    - imageChangeBuild:
+        fromRef:
+          kind: ImageStreamTag
+          name: springboot-maven3-centos:latest
+        imageID: codecentric/springboot-maven3-centos@sha256:b39d58f7beaf97c68047f82a45f74ee1173d162d36f066caa5f11496629f7b13
+      message: Image change
+  status:
+    config:
+      name: holamicro
+    outputDockerImageReference: 172.30.140.198:5000/microservices-book/holamicro:latest
+    phase: New
+- apiVersion: v1
+  kind: Build
+  metadata:
+    annotations:
+      openshift.io/build-config.name: holamicro
+      openshift.io/build.number: "2"
+      openshift.io/build.pod-name: holamicro-2-build
+    creationTimestamp: null
+    labels:
+      app: holamicro
+      buildconfig: holamicro
+      openshift.io/build-config.name: holamicro
+      openshift.io/build.start-policy: Serial
+    name: holamicro-2
+  spec:
+    nodeSelector: null
+    output:
+      pushSecret:
+        name: builder-dockercfg-xh39h
+      to:
+        kind: ImageStreamTag
+        name: holamicro:latest
+    postCommit: {}
+    resources: {}
+    revision:
+      git:
+        author:
+          email: erbrito@gmail.com
+          name: ebrito
+        commit: cabc35ed2914b86454ac65782d8016e77059068e
+        committer:
+          email: erbrito@gmail.com
+          name: ebrito
+        message: Adding Circuit Breaker with Hystrix
+      type: Git
+    serviceAccount: builder
+    source:
+      git:
+        uri: https://github.com/erbrito/MicroServicesForJavaDevelopersSpringBoot.git
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: DockerImage
+          name: codecentric/springboot-maven3-centos@sha256:b39d58f7beaf97c68047f82a45f74ee1173d162d36f066caa5f11496629f7b13
+      type: Source
+    triggeredBy:
+    - message: Manually triggered
+  status:
+    config:
+      name: holamicro
+    phase: New
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: holamicro
+    name: holamicro
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: 172.30.140.198:5000/microservices-book/holamicro:latest
+      generation: null
+      importPolicy: {}
+      name: latest
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+      openshift.io/image.dockerRepositoryCheck: 2017-04-26T03:25:39Z
+    creationTimestamp: null
+    generation: 2
+    labels:
+      app: holamicro
+    name: springboot-maven3-centos
+  spec:
+    tags:
+    - annotations:
+        openshift.io/imported-from: codecentric/springboot-maven3-centos
+      from:
+        kind: DockerImage
+        name: 172.30.140.198:5000/microservices-book/springboot-maven3-centos:latest
+      generation: 2
+      importPolicy: {}
+      name: latest
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: holamicro
+    name: holamicro
+  spec:
+    replicas: 1
+    selector:
+      app: holamicro
+      deploymentconfig: holamicro
+    strategy:
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        annotations:
+          openshift.io/container.holamicro.image.entrypoint: '["container-entrypoint","/bin/sh","-c","$STI_SCRIPTS_PATH/usage"]'
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: holamicro
+          deploymentconfig: holamicro
+      spec:
+        containers:
+        - image: 172.30.140.198:5000/microservices-book/holamicro@sha256:9a9d458a9ea210b40b71f90a3cd705b5e90110557c38b7e50e5e423cc9ad7859
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: api/hola
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: holamicro
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: configprops
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          volumeMounts:
+          - mountPath: /opt/app-root/src/config
+            name: volume-z8608
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            items:
+            - key: application.properties
+              path: application.properties
+            name: hola-config
+          name: volume-z8608
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - holamicro
+        from:
+          kind: ImageStreamTag
+          name: holamicro:latest
+          namespace: microservices-book
+      type: ImageChange
+    - type: ConfigChange
+  status: {}
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/original-replicas: "1"
+      openshift.io/deployer-pod.name: holamicro-1-deploy
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: holamicro
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "1"
+      openshift.io/deployment.status-reason: image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"holamicro","namespace":"microservices-book","selfLink":"/oapi/v1/namespaces/microservices-book/deploymentconfigs/holamicro","uid":"053c43ab-2a30-11e7-aa75-2e84f22e63c6","resourceVersion":"10948","generation":2,"creationTimestamp":"2017-04-26T03:25:39Z","labels":{"app":"holamicro"},"annotations":{"openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ConfigChange"},{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["holamicro"],"from":{"kind":"ImageStreamTag","namespace":"microservices-book","name":"holamicro:latest"},"lastTriggeredImage":"172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff"}}],"replicas":1,"test":false,"selector":{"app":"holamicro","deploymentconfig":"holamicro"},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"holamicro","deploymentconfig":"holamicro"},"annotations":{"openshift.io/container.holamicro.image.entrypoint":"[\"container-entrypoint\",\"/bin/sh\",\"-c\",\"$STI_SCRIPTS_PATH/usage\"]","openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"containers":[{"name":"holamicro","image":"172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":1,"observedGeneration":1,"replicas":0,"updatedReplicas":0,"availableReplicas":0,"unavailableReplicas":0,"details":{"message":"image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"microservices-book","name":"holamicro:latest"}}}]},"conditions":[{"type":"Available","status":"False","lastUpdateTime":"2017-04-26T03:25:39Z","lastTransitionTime":"2017-04-26T03:25:39Z","message":"Deployment config does not have minimum availability."}]}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: holamicro
+      openshift.io/deployment-config.name: holamicro
+    name: holamicro-1
+  spec:
+    replicas: 0
+    selector:
+      app: holamicro
+      deployment: holamicro-1
+      deploymentconfig: holamicro
+    template:
+      metadata:
+        annotations:
+          openshift.io/container.holamicro.image.entrypoint: '["container-entrypoint","/bin/sh","-c","$STI_SCRIPTS_PATH/usage"]'
+          openshift.io/deployment-config.latest-version: "1"
+          openshift.io/deployment-config.name: holamicro
+          openshift.io/deployment.name: holamicro-1
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: holamicro
+          deployment: holamicro-1
+          deploymentconfig: holamicro
+      spec:
+        containers:
+        - image: 172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff
+          imagePullPolicy: Always
+          name: holamicro
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/original-replicas: "1"
+      openshift.io/deployer-pod.name: holamicro-10-deploy
+      openshift.io/deployment-config.latest-version: "10"
+      openshift.io/deployment-config.name: holamicro
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: ""
+      openshift.io/deployment.status-reason: config change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"holamicro","namespace":"microservices-book","selfLink":"/oapi/v1/namespaces/microservices-book/deploymentconfigs/holamicro","uid":"053c43ab-2a30-11e7-aa75-2e84f22e63c6","resourceVersion":"13272","generation":19,"creationTimestamp":"2017-04-26T03:25:39Z","labels":{"app":"holamicro"},"annotations":{"openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["holamicro"],"from":{"kind":"ImageStreamTag","namespace":"microservices-book","name":"holamicro:latest"},"lastTriggeredImage":"172.30.140.198:5000/microservices-book/holamicro@sha256:9a9d458a9ea210b40b71f90a3cd705b5e90110557c38b7e50e5e423cc9ad7859"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"app":"holamicro","deploymentconfig":"holamicro"},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"holamicro","deploymentconfig":"holamicro"},"annotations":{"openshift.io/container.holamicro.image.entrypoint":"[\"container-entrypoint\",\"/bin/sh\",\"-c\",\"$STI_SCRIPTS_PATH/usage\"]","openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"volumes":[{"name":"volume-z8608","configMap":{"name":"hola-config","items":[{"key":"application.properties","path":"application.properties"}],"defaultMode":420}}],"containers":[{"name":"holamicro","image":"172.30.140.198:5000/microservices-book/holamicro@sha256:9a9d458a9ea210b40b71f90a3cd705b5e90110557c38b7e50e5e423cc9ad7859","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{},"volumeMounts":[{"name":"volume-z8608","mountPath":"/opt/app-root/src/config"}],"livenessProbe":{"httpGet":{"path":"/api/hola","port":8080,"scheme":"HTTP"},"initialDelaySeconds":10,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"httpGet":{"path":"/configprops","port":8080,"scheme":"HTTP"},"initialDelaySeconds":5,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":10,"observedGeneration":18,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"config change","causes":[{"type":"ConfigChange"}]},"conditions":[{"type":"Available","status":"True","lastUpdateTime":"2017-04-26T04:22:20Z","lastTransitionTime":"2017-04-26T04:22:20Z","message":"Deployment config has minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2017-04-26T05:42:45Z","lastTransitionTime":"2017-04-26T05:42:42Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"holamicro-9\" successfully rolled out"}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: holamicro
+      openshift.io/deployment-config.name: holamicro
+    name: holamicro-10
+  spec:
+    replicas: 0
+    selector:
+      app: holamicro
+      deployment: holamicro-10
+      deploymentconfig: holamicro
+    template:
+      metadata:
+        annotations:
+          openshift.io/container.holamicro.image.entrypoint: '["container-entrypoint","/bin/sh","-c","$STI_SCRIPTS_PATH/usage"]'
+          openshift.io/deployment-config.latest-version: "10"
+          openshift.io/deployment-config.name: holamicro
+          openshift.io/deployment.name: holamicro-10
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: holamicro
+          deployment: holamicro-10
+          deploymentconfig: holamicro
+      spec:
+        containers:
+        - image: 172.30.140.198:5000/microservices-book/holamicro@sha256:9a9d458a9ea210b40b71f90a3cd705b5e90110557c38b7e50e5e423cc9ad7859
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /api/hola
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: holamicro
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /configprops
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          volumeMounts:
+          - mountPath: /opt/app-root/src/config
+            name: volume-z8608
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            items:
+            - key: application.properties
+              path: application.properties
+            name: hola-config
+          name: volume-z8608
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: holamicro-11-deploy
+      openshift.io/deployment-config.latest-version: "11"
+      openshift.io/deployment-config.name: holamicro
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: ""
+      openshift.io/deployment.status-reason: config change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"holamicro","namespace":"microservices-book","selfLink":"/oapi/v1/namespaces/microservices-book/deploymentconfigs/holamicro","uid":"053c43ab-2a30-11e7-aa75-2e84f22e63c6","resourceVersion":"13452","generation":21,"creationTimestamp":"2017-04-26T03:25:39Z","labels":{"app":"holamicro"},"annotations":{"openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["holamicro"],"from":{"kind":"ImageStreamTag","namespace":"microservices-book","name":"holamicro:latest"},"lastTriggeredImage":"172.30.140.198:5000/microservices-book/holamicro@sha256:9a9d458a9ea210b40b71f90a3cd705b5e90110557c38b7e50e5e423cc9ad7859"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"app":"holamicro","deploymentconfig":"holamicro"},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"holamicro","deploymentconfig":"holamicro"},"annotations":{"openshift.io/container.holamicro.image.entrypoint":"[\"container-entrypoint\",\"/bin/sh\",\"-c\",\"$STI_SCRIPTS_PATH/usage\"]","openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"volumes":[{"name":"volume-z8608","configMap":{"name":"hola-config","items":[{"key":"application.properties","path":"application.properties"}],"defaultMode":420}}],"containers":[{"name":"holamicro","image":"172.30.140.198:5000/microservices-book/holamicro@sha256:9a9d458a9ea210b40b71f90a3cd705b5e90110557c38b7e50e5e423cc9ad7859","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{},"volumeMounts":[{"name":"volume-z8608","mountPath":"/opt/app-root/src/config"}],"livenessProbe":{"httpGet":{"path":"api/hola","port":8080,"scheme":"HTTP"},"initialDelaySeconds":10,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"httpGet":{"path":"configprops","port":8080,"scheme":"HTTP"},"initialDelaySeconds":5,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":11,"observedGeneration":20,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"config change","causes":[{"type":"ConfigChange"}]},"conditions":[{"type":"Available","status":"True","lastUpdateTime":"2017-04-26T04:22:20Z","lastTransitionTime":"2017-04-26T04:22:20Z","message":"Deployment config has minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2017-04-26T05:51:26Z","lastTransitionTime":"2017-04-26T05:51:24Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"holamicro-10\" successfully rolled out"}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: holamicro
+      openshift.io/deployment-config.name: holamicro
+    name: holamicro-11
+  spec:
+    replicas: 1
+    selector:
+      app: holamicro
+      deployment: holamicro-11
+      deploymentconfig: holamicro
+    template:
+      metadata:
+        annotations:
+          openshift.io/container.holamicro.image.entrypoint: '["container-entrypoint","/bin/sh","-c","$STI_SCRIPTS_PATH/usage"]'
+          openshift.io/deployment-config.latest-version: "11"
+          openshift.io/deployment-config.name: holamicro
+          openshift.io/deployment.name: holamicro-11
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: holamicro
+          deployment: holamicro-11
+          deploymentconfig: holamicro
+      spec:
+        containers:
+        - image: 172.30.140.198:5000/microservices-book/holamicro@sha256:9a9d458a9ea210b40b71f90a3cd705b5e90110557c38b7e50e5e423cc9ad7859
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: api/hola
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: holamicro
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: configprops
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          volumeMounts:
+          - mountPath: /opt/app-root/src/config
+            name: volume-z8608
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            items:
+            - key: application.properties
+              path: application.properties
+            name: hola-config
+          name: volume-z8608
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/desired-replicas: "1"
+      kubectl.kubernetes.io/update-source-id: holamicro-1:8bd086ca-2a30-11e7-aa75-2e84f22e63c6
+      openshift.io/deployer-pod.name: holamicro-2-deploy
+      openshift.io/deployment-config.latest-version: "2"
+      openshift.io/deployment-config.name: holamicro
+      openshift.io/deployment.cancelled: "true"
+      openshift.io/deployment.phase: Failed
+      openshift.io/deployment.replicas: "0"
+      openshift.io/deployment.status-reason: newer deployment was found running
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"holamicro","namespace":"microservices-book","selfLink":"/oapi/v1/namespaces/microservices-book/deploymentconfigs/holamicro","uid":"053c43ab-2a30-11e7-aa75-2e84f22e63c6","resourceVersion":"11789","generation":4,"creationTimestamp":"2017-04-26T03:25:39Z","labels":{"app":"holamicro"},"annotations":{"openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ConfigChange"},{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["holamicro"],"from":{"kind":"ImageStreamTag","namespace":"microservices-book","name":"holamicro:latest"},"lastTriggeredImage":"172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff"}}],"replicas":1,"test":false,"selector":{"app":"holamicro","deploymentconfig":"holamicro"},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"holamicro","deploymentconfig":"holamicro"},"annotations":{"openshift.io/container.holamicro.image.entrypoint":"[\"container-entrypoint\",\"/bin/sh\",\"-c\",\"$STI_SCRIPTS_PATH/usage\"]","openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"containers":[{"name":"holamicro","image":"172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff","ports":[{"containerPort":8080,"protocol":"TCP"}],"env":[{"name":"GREETING_BACKENDSERVICEHOST","valueFrom":{"configMapKeyRef":{"name":"hola-config","key":"greating.backendservicehost"}}},{"name":"GREETING_BACKENDSERVICEPORT","valueFrom":{"configMapKeyRef":{"name":"hola-config","key":"greating.backendserviceport"}}}],"resources":{},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":2,"observedGeneration":3,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"config change","causes":[{"type":"ConfigChange"}]},"conditions":[{"type":"Progressing","status":"True","lastUpdateTime":"2017-04-26T03:29:30Z","lastTransitionTime":"2017-04-26T03:29:30Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"holamicro-1\" successfully rolled out"},{"type":"Available","status":"True","lastUpdateTime":"2017-04-26T04:22:20Z","lastTransitionTime":"2017-04-26T04:22:20Z","message":"Deployment config has minimum availability."}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: holamicro
+      openshift.io/deployment-config.name: holamicro
+    name: holamicro-2
+  spec:
+    replicas: 0
+    selector:
+      app: holamicro
+      deployment: holamicro-2
+      deploymentconfig: holamicro
+    template:
+      metadata:
+        annotations:
+          openshift.io/container.holamicro.image.entrypoint: '["container-entrypoint","/bin/sh","-c","$STI_SCRIPTS_PATH/usage"]'
+          openshift.io/deployment-config.latest-version: "2"
+          openshift.io/deployment-config.name: holamicro
+          openshift.io/deployment.name: holamicro-2
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: holamicro
+          deployment: holamicro-2
+          deploymentconfig: holamicro
+      spec:
+        containers:
+        - env:
+          - name: GREETING_BACKENDSERVICEHOST
+            valueFrom:
+              configMapKeyRef:
+                key: greating.backendservicehost
+                name: hola-config
+          - name: GREETING_BACKENDSERVICEPORT
+            valueFrom:
+              configMapKeyRef:
+                key: greating.backendserviceport
+                name: hola-config
+          image: 172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff
+          imagePullPolicy: Always
+          name: holamicro
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/desired-replicas: "1"
+      kubectl.kubernetes.io/update-source-id: holamicro-1:8bd086ca-2a30-11e7-aa75-2e84f22e63c6
+      openshift.io/deployer-pod.name: holamicro-3-deploy
+      openshift.io/deployment-config.latest-version: "3"
+      openshift.io/deployment-config.name: holamicro
+      openshift.io/deployment.cancelled: "true"
+      openshift.io/deployment.phase: Failed
+      openshift.io/deployment.replicas: "0"
+      openshift.io/deployment.status-reason: newer deployment was found running
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"holamicro","namespace":"microservices-book","selfLink":"/oapi/v1/namespaces/microservices-book/deploymentconfigs/holamicro","uid":"053c43ab-2a30-11e7-aa75-2e84f22e63c6","resourceVersion":"11972","generation":6,"creationTimestamp":"2017-04-26T03:25:39Z","labels":{"app":"holamicro"},"annotations":{"openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ConfigChange"},{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["holamicro"],"from":{"kind":"ImageStreamTag","namespace":"microservices-book","name":"holamicro:latest"},"lastTriggeredImage":"172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff"}}],"replicas":1,"test":false,"selector":{"app":"holamicro","deploymentconfig":"holamicro"},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"holamicro","deploymentconfig":"holamicro"},"annotations":{"openshift.io/container.holamicro.image.entrypoint":"[\"container-entrypoint\",\"/bin/sh\",\"-c\",\"$STI_SCRIPTS_PATH/usage\"]","openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"containers":[{"name":"holamicro","image":"172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff","ports":[{"containerPort":8080,"protocol":"TCP"}],"env":[{"name":"GREETING_BACKENDSERVICEHOST","valueFrom":{"configMapKeyRef":{"name":"hola-config","key":"greating.backendServiceHost"}}},{"name":"GREETING_BACKENDSERVICEPORT","valueFrom":{"configMapKeyRef":{"name":"hola-config","key":"greating.backendServicePort"}}}],"resources":{},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":3,"observedGeneration":5,"replicas":2,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":1,"details":{"message":"config change","causes":[{"type":"ConfigChange"}]},"conditions":[{"type":"Available","status":"True","lastUpdateTime":"2017-04-26T04:22:20Z","lastTransitionTime":"2017-04-26T04:22:20Z","message":"Deployment config has minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2017-04-26T04:51:06Z","lastTransitionTime":"2017-04-26T04:51:06Z","reason":"ReplicationControllerUpdated","message":"replication controller \"holamicro-2\" is progressing"}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: holamicro
+      openshift.io/deployment-config.name: holamicro
+    name: holamicro-3
+  spec:
+    replicas: 0
+    selector:
+      app: holamicro
+      deployment: holamicro-3
+      deploymentconfig: holamicro
+    template:
+      metadata:
+        annotations:
+          openshift.io/container.holamicro.image.entrypoint: '["container-entrypoint","/bin/sh","-c","$STI_SCRIPTS_PATH/usage"]'
+          openshift.io/deployment-config.latest-version: "3"
+          openshift.io/deployment-config.name: holamicro
+          openshift.io/deployment.name: holamicro-3
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: holamicro
+          deployment: holamicro-3
+          deploymentconfig: holamicro
+      spec:
+        containers:
+        - env:
+          - name: GREETING_BACKENDSERVICEHOST
+            valueFrom:
+              configMapKeyRef:
+                key: greating.backendServiceHost
+                name: hola-config
+          - name: GREETING_BACKENDSERVICEPORT
+            valueFrom:
+              configMapKeyRef:
+                key: greating.backendServicePort
+                name: hola-config
+          image: 172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff
+          imagePullPolicy: Always
+          name: holamicro
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/original-replicas: "1"
+      openshift.io/deployer-pod.name: holamicro-4-deploy
+      openshift.io/deployment-config.latest-version: "4"
+      openshift.io/deployment-config.name: holamicro
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: ""
+      openshift.io/deployment.status-reason: config change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"holamicro","namespace":"microservices-book","selfLink":"/oapi/v1/namespaces/microservices-book/deploymentconfigs/holamicro","uid":"053c43ab-2a30-11e7-aa75-2e84f22e63c6","resourceVersion":"12155","generation":8,"creationTimestamp":"2017-04-26T03:25:39Z","labels":{"app":"holamicro"},"annotations":{"openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["holamicro"],"from":{"kind":"ImageStreamTag","namespace":"microservices-book","name":"holamicro:latest"},"lastTriggeredImage":"172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"app":"holamicro","deploymentconfig":"holamicro"},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"holamicro","deploymentconfig":"holamicro"},"annotations":{"openshift.io/container.holamicro.image.entrypoint":"[\"container-entrypoint\",\"/bin/sh\",\"-c\",\"$STI_SCRIPTS_PATH/usage\"]","openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"containers":[{"name":"holamicro","image":"172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":4,"observedGeneration":7,"replicas":2,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":1,"details":{"message":"config change","causes":[{"type":"ConfigChange"}]},"conditions":[{"type":"Available","status":"True","lastUpdateTime":"2017-04-26T04:22:20Z","lastTransitionTime":"2017-04-26T04:22:20Z","message":"Deployment config has minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2017-04-26T04:56:33Z","lastTransitionTime":"2017-04-26T04:56:33Z","reason":"ReplicationControllerUpdated","message":"replication controller \"holamicro-3\" is progressing"}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: holamicro
+      openshift.io/deployment-config.name: holamicro
+    name: holamicro-4
+  spec:
+    replicas: 0
+    selector:
+      app: holamicro
+      deployment: holamicro-4
+      deploymentconfig: holamicro
+    template:
+      metadata:
+        annotations:
+          openshift.io/container.holamicro.image.entrypoint: '["container-entrypoint","/bin/sh","-c","$STI_SCRIPTS_PATH/usage"]'
+          openshift.io/deployment-config.latest-version: "4"
+          openshift.io/deployment-config.name: holamicro
+          openshift.io/deployment.name: holamicro-4
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: holamicro
+          deployment: holamicro-4
+          deploymentconfig: holamicro
+      spec:
+        containers:
+        - image: 172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff
+          imagePullPolicy: Always
+          name: holamicro
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/original-replicas: "1"
+      openshift.io/deployer-pod.name: holamicro-5-deploy
+      openshift.io/deployment-config.latest-version: "5"
+      openshift.io/deployment-config.name: holamicro
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: ""
+      openshift.io/deployment.status-reason: config change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"holamicro","namespace":"microservices-book","selfLink":"/oapi/v1/namespaces/microservices-book/deploymentconfigs/holamicro","uid":"053c43ab-2a30-11e7-aa75-2e84f22e63c6","resourceVersion":"12292","generation":10,"creationTimestamp":"2017-04-26T03:25:39Z","labels":{"app":"holamicro"},"annotations":{"openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["holamicro"],"from":{"kind":"ImageStreamTag","namespace":"microservices-book","name":"holamicro:latest"},"lastTriggeredImage":"172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"app":"holamicro","deploymentconfig":"holamicro"},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"holamicro","deploymentconfig":"holamicro"},"annotations":{"openshift.io/container.holamicro.image.entrypoint":"[\"container-entrypoint\",\"/bin/sh\",\"-c\",\"$STI_SCRIPTS_PATH/usage\"]","openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"volumes":[{"name":"volume-z8608","configMap":{"name":"hola-config","items":[{"key":"application.properties","path":"application.properties"}],"defaultMode":420}}],"containers":[{"name":"holamicro","image":"172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{},"volumeMounts":[{"name":"volume-z8608","mountPath":"/config"}],"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":5,"observedGeneration":9,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"config change","causes":[{"type":"ConfigChange"}]},"conditions":[{"type":"Available","status":"True","lastUpdateTime":"2017-04-26T04:22:20Z","lastTransitionTime":"2017-04-26T04:22:20Z","message":"Deployment config has minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2017-04-26T05:01:14Z","lastTransitionTime":"2017-04-26T05:01:11Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"holamicro-4\" successfully rolled out"}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: holamicro
+      openshift.io/deployment-config.name: holamicro
+    name: holamicro-5
+  spec:
+    replicas: 0
+    selector:
+      app: holamicro
+      deployment: holamicro-5
+      deploymentconfig: holamicro
+    template:
+      metadata:
+        annotations:
+          openshift.io/container.holamicro.image.entrypoint: '["container-entrypoint","/bin/sh","-c","$STI_SCRIPTS_PATH/usage"]'
+          openshift.io/deployment-config.latest-version: "5"
+          openshift.io/deployment-config.name: holamicro
+          openshift.io/deployment.name: holamicro-5
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: holamicro
+          deployment: holamicro-5
+          deploymentconfig: holamicro
+      spec:
+        containers:
+        - image: 172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff
+          imagePullPolicy: Always
+          name: holamicro
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          volumeMounts:
+          - mountPath: /config
+            name: volume-z8608
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            items:
+            - key: application.properties
+              path: application.properties
+            name: hola-config
+          name: volume-z8608
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/desired-replicas: "1"
+      kubectl.kubernetes.io/update-source-id: holamicro-5:caa927c9-2a3d-11e7-aa75-2e84f22e63c6
+      openshift.io/deployer-pod.name: holamicro-6-deploy
+      openshift.io/deployment-config.latest-version: "6"
+      openshift.io/deployment-config.name: holamicro
+      openshift.io/deployment.cancelled: "true"
+      openshift.io/deployment.phase: Failed
+      openshift.io/deployment.replicas: "0"
+      openshift.io/deployment.status-reason: newer deployment was found running
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"holamicro","namespace":"microservices-book","selfLink":"/oapi/v1/namespaces/microservices-book/deploymentconfigs/holamicro","uid":"053c43ab-2a30-11e7-aa75-2e84f22e63c6","resourceVersion":"12530","generation":12,"creationTimestamp":"2017-04-26T03:25:39Z","labels":{"app":"holamicro"},"annotations":{"openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["holamicro"],"from":{"kind":"ImageStreamTag","namespace":"microservices-book","name":"holamicro:latest"},"lastTriggeredImage":"172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"app":"holamicro","deploymentconfig":"holamicro"},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"holamicro","deploymentconfig":"holamicro"},"annotations":{"openshift.io/container.holamicro.image.entrypoint":"[\"container-entrypoint\",\"/bin/sh\",\"-c\",\"$STI_SCRIPTS_PATH/usage\"]","openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"volumes":[{"name":"volume-z8608","configMap":{"name":"hola-config","items":[{"key":"application.properties","path":"application.properties"}],"defaultMode":420}}],"containers":[{"name":"holamicro","image":"172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{},"volumeMounts":[{"name":"volume-z8608","mountPath":"config/"}],"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":6,"observedGeneration":11,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"config change","causes":[{"type":"ConfigChange"}]},"conditions":[{"type":"Available","status":"True","lastUpdateTime":"2017-04-26T04:22:20Z","lastTransitionTime":"2017-04-26T04:22:20Z","message":"Deployment config has minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2017-04-26T05:04:25Z","lastTransitionTime":"2017-04-26T05:04:23Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"holamicro-5\" successfully rolled out"}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: holamicro
+      openshift.io/deployment-config.name: holamicro
+    name: holamicro-6
+  spec:
+    replicas: 0
+    selector:
+      app: holamicro
+      deployment: holamicro-6
+      deploymentconfig: holamicro
+    template:
+      metadata:
+        annotations:
+          openshift.io/container.holamicro.image.entrypoint: '["container-entrypoint","/bin/sh","-c","$STI_SCRIPTS_PATH/usage"]'
+          openshift.io/deployment-config.latest-version: "6"
+          openshift.io/deployment-config.name: holamicro
+          openshift.io/deployment.name: holamicro-6
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: holamicro
+          deployment: holamicro-6
+          deploymentconfig: holamicro
+      spec:
+        containers:
+        - image: 172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff
+          imagePullPolicy: Always
+          name: holamicro
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          volumeMounts:
+          - mountPath: config/
+            name: volume-z8608
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            items:
+            - key: application.properties
+              path: application.properties
+            name: hola-config
+          name: volume-z8608
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/original-replicas: "1"
+      openshift.io/deployer-pod.name: holamicro-7-deploy
+      openshift.io/deployment-config.latest-version: "7"
+      openshift.io/deployment-config.name: holamicro
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: ""
+      openshift.io/deployment.status-reason: config change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"holamicro","namespace":"microservices-book","selfLink":"/oapi/v1/namespaces/microservices-book/deploymentconfigs/holamicro","uid":"053c43ab-2a30-11e7-aa75-2e84f22e63c6","resourceVersion":"12598","generation":14,"creationTimestamp":"2017-04-26T03:25:39Z","labels":{"app":"holamicro"},"annotations":{"openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["holamicro"],"from":{"kind":"ImageStreamTag","namespace":"microservices-book","name":"holamicro:latest"},"lastTriggeredImage":"172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"app":"holamicro","deploymentconfig":"holamicro"},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"holamicro","deploymentconfig":"holamicro"},"annotations":{"openshift.io/container.holamicro.image.entrypoint":"[\"container-entrypoint\",\"/bin/sh\",\"-c\",\"$STI_SCRIPTS_PATH/usage\"]","openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"volumes":[{"name":"volume-z8608","configMap":{"name":"hola-config","items":[{"key":"application.properties","path":"application.properties"}],"defaultMode":420}}],"containers":[{"name":"holamicro","image":"172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{},"volumeMounts":[{"name":"volume-z8608","mountPath":"/config"}],"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":7,"observedGeneration":13,"replicas":2,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":1,"details":{"message":"config change","causes":[{"type":"ConfigChange"}]},"conditions":[{"type":"Available","status":"True","lastUpdateTime":"2017-04-26T04:22:20Z","lastTransitionTime":"2017-04-26T04:22:20Z","message":"Deployment config has minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2017-04-26T05:17:28Z","lastTransitionTime":"2017-04-26T05:17:28Z","reason":"ReplicationControllerUpdated","message":"replication controller \"holamicro-6\" is progressing"}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: holamicro
+      openshift.io/deployment-config.name: holamicro
+    name: holamicro-7
+  spec:
+    replicas: 0
+    selector:
+      app: holamicro
+      deployment: holamicro-7
+      deploymentconfig: holamicro
+    template:
+      metadata:
+        annotations:
+          openshift.io/container.holamicro.image.entrypoint: '["container-entrypoint","/bin/sh","-c","$STI_SCRIPTS_PATH/usage"]'
+          openshift.io/deployment-config.latest-version: "7"
+          openshift.io/deployment-config.name: holamicro
+          openshift.io/deployment.name: holamicro-7
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: holamicro
+          deployment: holamicro-7
+          deploymentconfig: holamicro
+      spec:
+        containers:
+        - image: 172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff
+          imagePullPolicy: Always
+          name: holamicro
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          volumeMounts:
+          - mountPath: /config
+            name: volume-z8608
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            items:
+            - key: application.properties
+              path: application.properties
+            name: hola-config
+          name: volume-z8608
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/original-replicas: "1"
+      openshift.io/deployer-pod.name: holamicro-8-deploy
+      openshift.io/deployment-config.latest-version: "8"
+      openshift.io/deployment-config.name: holamicro
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: ""
+      openshift.io/deployment.status-reason: config change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"holamicro","namespace":"microservices-book","selfLink":"/oapi/v1/namespaces/microservices-book/deploymentconfigs/holamicro","uid":"053c43ab-2a30-11e7-aa75-2e84f22e63c6","resourceVersion":"12859","generation":16,"creationTimestamp":"2017-04-26T03:25:39Z","labels":{"app":"holamicro"},"annotations":{"openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["holamicro"],"from":{"kind":"ImageStreamTag","namespace":"microservices-book","name":"holamicro:latest"},"lastTriggeredImage":"172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"app":"holamicro","deploymentconfig":"holamicro"},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"holamicro","deploymentconfig":"holamicro"},"annotations":{"openshift.io/container.holamicro.image.entrypoint":"[\"container-entrypoint\",\"/bin/sh\",\"-c\",\"$STI_SCRIPTS_PATH/usage\"]","openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"volumes":[{"name":"volume-z8608","configMap":{"name":"hola-config","items":[{"key":"application.properties","path":"application.properties"}],"defaultMode":420}}],"containers":[{"name":"holamicro","image":"172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{},"volumeMounts":[{"name":"volume-z8608","mountPath":"/opt/app-root/src/config"}],"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":8,"observedGeneration":15,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"config change","causes":[{"type":"ConfigChange"}]},"conditions":[{"type":"Available","status":"True","lastUpdateTime":"2017-04-26T04:22:20Z","lastTransitionTime":"2017-04-26T04:22:20Z","message":"Deployment config has minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2017-04-26T05:18:30Z","lastTransitionTime":"2017-04-26T05:18:27Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"holamicro-7\" successfully rolled out"}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: holamicro
+      openshift.io/deployment-config.name: holamicro
+    name: holamicro-8
+  spec:
+    replicas: 0
+    selector:
+      app: holamicro
+      deployment: holamicro-8
+      deploymentconfig: holamicro
+    template:
+      metadata:
+        annotations:
+          openshift.io/container.holamicro.image.entrypoint: '["container-entrypoint","/bin/sh","-c","$STI_SCRIPTS_PATH/usage"]'
+          openshift.io/deployment-config.latest-version: "8"
+          openshift.io/deployment-config.name: holamicro
+          openshift.io/deployment.name: holamicro-8
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: holamicro
+          deployment: holamicro-8
+          deploymentconfig: holamicro
+      spec:
+        containers:
+        - image: 172.30.140.198:5000/microservices-book/holamicro@sha256:31aec613236665858d0d9825e53577f2513c908e9dc424ce1442a4448b8dfaff
+          imagePullPolicy: Always
+          name: holamicro
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          volumeMounts:
+          - mountPath: /opt/app-root/src/config
+            name: volume-z8608
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            items:
+            - key: application.properties
+              path: application.properties
+            name: hola-config
+          name: volume-z8608
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/original-replicas: "1"
+      openshift.io/deployer-pod.name: holamicro-9-deploy
+      openshift.io/deployment-config.latest-version: "9"
+      openshift.io/deployment-config.name: holamicro
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: ""
+      openshift.io/deployment.status-reason: image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"holamicro","namespace":"microservices-book","selfLink":"/oapi/v1/namespaces/microservices-book/deploymentconfigs/holamicro","uid":"053c43ab-2a30-11e7-aa75-2e84f22e63c6","resourceVersion":"13109","generation":17,"creationTimestamp":"2017-04-26T03:25:39Z","labels":{"app":"holamicro"},"annotations":{"openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["holamicro"],"from":{"kind":"ImageStreamTag","namespace":"microservices-book","name":"holamicro:latest"},"lastTriggeredImage":"172.30.140.198:5000/microservices-book/holamicro@sha256:9a9d458a9ea210b40b71f90a3cd705b5e90110557c38b7e50e5e423cc9ad7859"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"app":"holamicro","deploymentconfig":"holamicro"},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"holamicro","deploymentconfig":"holamicro"},"annotations":{"openshift.io/container.holamicro.image.entrypoint":"[\"container-entrypoint\",\"/bin/sh\",\"-c\",\"$STI_SCRIPTS_PATH/usage\"]","openshift.io/generated-by":"OpenShiftNewApp"}},"spec":{"volumes":[{"name":"volume-z8608","configMap":{"name":"hola-config","items":[{"key":"application.properties","path":"application.properties"}],"defaultMode":420}}],"containers":[{"name":"holamicro","image":"172.30.140.198:5000/microservices-book/holamicro@sha256:9a9d458a9ea210b40b71f90a3cd705b5e90110557c38b7e50e5e423cc9ad7859","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{},"volumeMounts":[{"name":"volume-z8608","mountPath":"/opt/app-root/src/config"}],"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":9,"observedGeneration":16,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"microservices-book","name":"holamicro:latest"}}}]},"conditions":[{"type":"Available","status":"True","lastUpdateTime":"2017-04-26T04:22:20Z","lastTransitionTime":"2017-04-26T04:22:20Z","message":"Deployment config has minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2017-04-26T05:29:46Z","lastTransitionTime":"2017-04-26T05:29:43Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"holamicro-8\" successfully rolled out"}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: holamicro
+      openshift.io/deployment-config.name: holamicro
+    name: holamicro-9
+  spec:
+    replicas: 0
+    selector:
+      app: holamicro
+      deployment: holamicro-9
+      deploymentconfig: holamicro
+    template:
+      metadata:
+        annotations:
+          openshift.io/container.holamicro.image.entrypoint: '["container-entrypoint","/bin/sh","-c","$STI_SCRIPTS_PATH/usage"]'
+          openshift.io/deployment-config.latest-version: "9"
+          openshift.io/deployment-config.name: holamicro
+          openshift.io/deployment.name: holamicro-9
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: holamicro
+          deployment: holamicro-9
+          deploymentconfig: holamicro
+      spec:
+        containers:
+        - image: 172.30.140.198:5000/microservices-book/holamicro@sha256:9a9d458a9ea210b40b71f90a3cd705b5e90110557c38b7e50e5e423cc9ad7859
+          imagePullPolicy: Always
+          name: holamicro
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          volumeMounts:
+          - mountPath: /opt/app-root/src/config
+            name: volume-z8608
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            items:
+            - key: application.properties
+              path: application.properties
+            name: hola-config
+          name: volume-z8608
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: holamicro
+    name: holamicro
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: holamicro
+      deploymentconfig: holamicro
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/created-by: |
+        {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"microservices-book","name":"holamicro-11","uid":"a0e84d6b-2a45-11e7-aa75-2e84f22e63c6","apiVersion":"v1","resourceVersion":"13472"}}
+      openshift.io/container.holamicro.image.entrypoint: '["container-entrypoint","/bin/sh","-c","$STI_SCRIPTS_PATH/usage"]'
+      openshift.io/deployment-config.latest-version: "11"
+      openshift.io/deployment-config.name: holamicro
+      openshift.io/deployment.name: holamicro-11
+      openshift.io/generated-by: OpenShiftNewApp
+      openshift.io/scc: restricted
+    creationTimestamp: null
+    generateName: holamicro-11-
+    labels:
+      app: holamicro
+      deployment: holamicro-11
+      deploymentconfig: holamicro
+  spec:
+    containers:
+    - image: 172.30.140.198:5000/microservices-book/holamicro@sha256:9a9d458a9ea210b40b71f90a3cd705b5e90110557c38b7e50e5e423cc9ad7859
+      imagePullPolicy: Always
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: api/hola
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: holamicro
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: configprops
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+          - KILL
+          - MKNOD
+          - SETGID
+          - SETUID
+          - SYS_CHROOT
+        privileged: false
+        runAsUser: 1000050000
+        seLinuxOptions:
+          level: s0:c7,c4
+      terminationMessagePath: /dev/termination-log
+      volumeMounts:
+      - mountPath: /opt/app-root/src/config
+        name: volume-z8608
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-n28v3
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    imagePullSecrets:
+    - name: default-dockercfg-frz2n
+    nodeName: 192.168.65.2
+    restartPolicy: Always
+    securityContext:
+      fsGroup: 1000050000
+      seLinuxOptions:
+        level: s0:c7,c4
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - configMap:
+        defaultMode: 420
+        items:
+        - key: application.properties
+          path: application.properties
+        name: hola-config
+      name: volume-z8608
+    - name: default-token-n28v3
+      secret:
+        defaultMode: 420
+        secretName: default-token-n28v3
+  status:
+    phase: Pending
+kind: List
+metadata: {}
