@@ -1,5 +1,6 @@
 package com.example;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,27 +15,26 @@ import org.springframework.web.client.RestTemplate;
 @ConfigurationProperties(prefix="greeting")
 public class GreeterRestController {
 
+	@Value("${greeting.backendServiceContext}")
+	private String backendServiceContext;
+	
     private RestTemplate template = new RestTemplate();
     private String saying;
     private String backendServiceHost;
     private int backendServicePort;
 
-    @RequestMapping(value="/greeting",
-    method = RequestMethod.GET,
-    produces = "text/plain")
+    @RequestMapping(value="/greeting", method = RequestMethod.GET, produces = "text/plain")
     public String greeting(){
-        String backendServiceUrl = String.format(
-                "http://%s:%d/api/backend?greeting={greeting}",
-                backendServiceHost, backendServicePort);
-        BackendDTO response = template.getForObject(
-                backendServiceUrl, BackendDTO.class, saying
-        );
+        String backendServiceUrl = String.format("http://%s:%d/%s/api/backend?greeting={greeting}",
+        		backendServiceHost, backendServicePort, backendServiceContext);
+        
+        BackendDTO response = template.getForObject(backendServiceUrl, BackendDTO.class, saying);
         return response.getGreeting() + " at host: " + response.getIp();
     }
 
     @RequestMapping(value = "/greeting-circuit-breaker", method = RequestMethod.GET, produces = "text/plain")
     public String greetingHystrix() {
-        BackendCommand backendCommand = new BackendCommand(backendServiceHost, backendServicePort)
+        BackendCommand backendCommand = new BackendCommand(backendServiceHost, backendServicePort, backendServiceContext)
                 .withSaying(saying).withTemplate(template);
         BackendDTO response = backendCommand.execute();
         return response.getGreeting() + " at host: " + response.getIp();

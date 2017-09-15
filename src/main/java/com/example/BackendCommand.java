@@ -10,12 +10,14 @@ import org.springframework.web.client.RestTemplate;
  * Created by ebrito on 2017-04-25.
  */
 public class BackendCommand extends HystrixCommand<BackendDTO>{
+	
     private String host;
     private int port;
+    private String context;
     private String saying;
     private RestTemplate template;
 
-    public BackendCommand(String host, int port) {
+    public BackendCommand(String host, int port, String context) {
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("wildflyswarm.backend"))
                 .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()
                         .withCoreSize(10)
@@ -28,6 +30,7 @@ public class BackendCommand extends HystrixCommand<BackendDTO>{
         ;
         this.host = host;
         this.port = port;
+        this.context = context;
     }
 
     public BackendCommand withSaying(String saying) {
@@ -45,7 +48,7 @@ public class BackendCommand extends HystrixCommand<BackendDTO>{
 
     @Override
     protected BackendDTO run() throws Exception {
-        String backendServiceUrl = String.format("http://%s:%d/api/backend?greeting={greeting}",  host,port);
+        String backendServiceUrl = String.format("http://%s:%d/%s/api/backend?greeting={greeting}",  host, port, context);
         System.out.println("Sending to: " + backendServiceUrl);
         return template.getForObject(backendServiceUrl, BackendDTO.class, saying);
 
