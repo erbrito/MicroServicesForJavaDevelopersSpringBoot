@@ -24,7 +24,7 @@ public class GreeterRestController {
     produces = "text/plain")
     public String greeting(){
         String backendServiceUrl = String.format(
-                "http://%s:%d/api/backend?greeting={greeting}",
+                "http://%s:%d/backend-1.0/api/backend?greeting={greeting}",
                 backendServiceHost, backendServicePort);
         BackendDTO response = template.getForObject(
                 backendServiceUrl, BackendDTO.class, saying

@@ -45,7 +45,7 @@ public class BackendCommand extends HystrixCommand<BackendDTO>{
 
     @Override
     protected BackendDTO run() throws Exception {
-        String backendServiceUrl = String.format("http://%s:%d/api/backend?greeting={greeting}",  host,port);
+        String backendServiceUrl = String.format("http://%s:%d/backend-1.0/api/backend?greeting={greeting}",  host,port);
         System.out.println("Sending to: " + backendServiceUrl);
         return template.getForObject(backendServiceUrl, BackendDTO.class, saying);
 
