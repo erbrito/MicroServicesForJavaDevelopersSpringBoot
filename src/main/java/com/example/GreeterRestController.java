@@ -18,23 +18,19 @@ public class GreeterRestController {
     private String saying;
     private String backendServiceHost;
     private int backendServicePort;
-
-    @RequestMapping(value="/greeting",
-    method = RequestMethod.GET,
-    produces = "text/plain")
+    private String backendServiceContext;
+    
+    @RequestMapping(value="/greeting", method = RequestMethod.GET, produces = "text/plain")
     public String greeting(){
-        String backendServiceUrl = String.format(
-                "http://%s:%d/api/backend?greeting={greeting}",
-                backendServiceHost, backendServicePort);
-        BackendDTO response = template.getForObject(
-                backendServiceUrl, BackendDTO.class, saying
-        );
+        String backendServiceUrl = UrlUtil.getBackendServiceUrl(backendServiceHost, backendServicePort, backendServiceContext);
+        
+        BackendDTO response = template.getForObject(backendServiceUrl, BackendDTO.class, saying);
         return response.getGreeting() + " at host: " + response.getIp();
     }
-
+    
     @RequestMapping(value = "/greeting-circuit-breaker", method = RequestMethod.GET, produces = "text/plain")
     public String greetingHystrix() {
-        BackendCommand backendCommand = new BackendCommand(backendServiceHost, backendServicePort)
+        BackendCommand backendCommand = new BackendCommand(backendServiceHost, backendServicePort, backendServiceContext)
                 .withSaying(saying).withTemplate(template);
         BackendDTO response = backendCommand.execute();
         return response.getGreeting() + " at host: " + response.getIp();
@@ -66,6 +62,12 @@ public class GreeterRestController {
         this.backendServicePort = backendServicePort;
     }
 
+	public String getBackendServiceContext() {
+		return backendServiceContext;
+	}
 
+	public void setBackendServiceContext(String backendServiceContext) {
+		this.backendServiceContext = backendServiceContext;
+	}
 
 }
