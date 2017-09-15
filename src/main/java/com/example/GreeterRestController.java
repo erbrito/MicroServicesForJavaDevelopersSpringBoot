@@ -1,7 +1,11 @@
 package com.example;
 
-import org.springframework.beans.factory.annotation.Value;
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.core.env.Environment;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,21 +19,32 @@ import org.springframework.web.client.RestTemplate;
 @ConfigurationProperties(prefix="greeting")
 public class GreeterRestController {
 
-	@Value("${greeting.backendServiceContext}")
-	private String backendServiceContext;
+	@Autowired
+	private Environment env;
 	
     private RestTemplate template = new RestTemplate();
     private String saying;
     private String backendServiceHost;
     private int backendServicePort;
-
+    private String backendServiceContext;
+    
+    @PostConstruct
+    public void postConstruct() {
+    	backendServiceContext = env.getProperty("greeting.backendServiceContext", "");
+    }
+    
     @RequestMapping(value="/greeting", method = RequestMethod.GET, produces = "text/plain")
     public String greeting(){
-        String backendServiceUrl = String.format("http://%s:%d/%s/api/backend?greeting={greeting}",
-        		backendServiceHost, backendServicePort, backendServiceContext);
+        String backendServiceUrl = getBackendServiceUrl(backendServiceHost, backendServicePort, backendServiceContext);
         
         BackendDTO response = template.getForObject(backendServiceUrl, BackendDTO.class, saying);
         return response.getGreeting() + " at host: " + response.getIp();
+    }
+    
+    private String getBackendServiceUrl(String host, int port, String context) {
+    	return StringUtils.isEmpty(context) 
+			? String.format("http://%s:%d/api/backend?greeting={greeting}", host, port)
+			: String.format("http://%s:%d/%s/api/backend?greeting={greeting}", host, port, context);
     }
 
     @RequestMapping(value = "/greeting-circuit-breaker", method = RequestMethod.GET, produces = "text/plain")
