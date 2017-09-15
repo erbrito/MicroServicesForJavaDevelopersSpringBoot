@@ -1,10 +1,6 @@
 package com.example;
 
-import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,19 +15,11 @@ import org.springframework.web.client.RestTemplate;
 @ConfigurationProperties(prefix="greeting")
 public class GreeterRestController {
 
-	@Autowired
-	private Environment env;
-	
     private RestTemplate template = new RestTemplate();
     private String saying;
     private String backendServiceHost;
     private int backendServicePort;
     private String backendServiceContext;
-    
-    @PostConstruct
-    public void postConstruct() {
-    	backendServiceContext = env.getProperty("greeting.backendServiceContext", "");
-    }
     
     @RequestMapping(value="/greeting", method = RequestMethod.GET, produces = "text/plain")
     public String greeting(){
@@ -81,6 +69,12 @@ public class GreeterRestController {
         this.backendServicePort = backendServicePort;
     }
 
+	public String getBackendServiceContext() {
+		return backendServiceContext;
+	}
 
+	public void setBackendServiceContext(String backendServiceContext) {
+		this.backendServiceContext = backendServiceContext;
+	}
 
 }
