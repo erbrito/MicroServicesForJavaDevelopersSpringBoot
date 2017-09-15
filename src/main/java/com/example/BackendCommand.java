@@ -1,12 +1,11 @@
 package com.example;
 
+import org.springframework.web.client.RestTemplate;
+
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.HystrixThreadPoolProperties;
-
-import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * Created by ebrito on 2017-04-25.
@@ -50,18 +49,12 @@ public class BackendCommand extends HystrixCommand<BackendDTO>{
 
     @Override
     protected BackendDTO run() throws Exception {
-        String backendServiceUrl = getBackendServiceUrl(host, port, context);
+        String backendServiceUrl = UrlUtil.getBackendServiceUrl(host, port, context);
         System.out.println("Sending to: " + backendServiceUrl);
         return template.getForObject(backendServiceUrl, BackendDTO.class, saying);
 
     }
     
-    private String getBackendServiceUrl(String host, int port, String context) {
-    	return StringUtils.isEmpty(context) 
-			? String.format("http://%s:%d/api/backend?greeting={greeting}", host, port)
-			: String.format("http://%s:%d/%s/api/backend?greeting={greeting}",  host, port, context);
-    }
-
     @Override
     protected BackendDTO getFallback() {
         BackendDTO rc = new BackendDTO();
