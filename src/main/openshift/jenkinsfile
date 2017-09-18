@@ -1,6 +1,6 @@
 node {
             stage 'build'
-            openshiftBuild(buildConfig: 'exposed-springboot-microservice-enhanced-2', showBuildLogs: 'true')
+            openshiftBuild(buildConfig: 'exposed-springboot-microservice-enhanced', showBuildLogs: 'true')
             stage 'deploy'
             def toDeploy = input message: 'Do we want to deploy?', parameters: [booleanParam(defaultValue: true, description: '', name: 'to_deploy')]
             if (toDeploy){
